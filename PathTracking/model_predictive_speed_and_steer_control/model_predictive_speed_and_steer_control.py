@@ -306,7 +306,7 @@ def calc_ref_trajectory(state, cx, cy, cyaw, ck, sp, dl, pind):
     ncourse = len(cx)
 
     ind, _ = calc_nearest_index(state, cx, cy, cyaw, pind)
-
+    
     if pind >= ind:
         ind = pind
 
@@ -314,16 +314,16 @@ def calc_ref_trajectory(state, cx, cy, cyaw, ck, sp, dl, pind):
     xref[1, 0] = cy[ind]
     xref[2, 0] = sp[ind]
     xref[3, 0] = cyaw[ind]
-    dref[0, 0] = 0.0  # steer operational point should be 0
+    dref[0, 0] = 0.0  #steer operational point should be 0
 
     travel = 0.0
 
-    for i in range(T + 1):
+    for i in range(1, T + 1):
         travel += abs(state.v) * DT
         dind = int(round(travel / dl))
 
         if (ind + dind) < ncourse:
-            xref[0, i] = cx[ind + dind]
+            xref[0, i] = cx[ind + dind] #overwrites previous declaration of refrence tranjecotry for all valeues at y = 0
             xref[1, i] = cy[ind + dind]
             xref[2, i] = sp[ind + dind]
             xref[3, i] = cyaw[ind + dind]
@@ -478,11 +478,11 @@ def smooth_yaw(yaw):
     for i in range(len(yaw) - 1):
         dyaw = yaw[i + 1] - yaw[i]
 
-        while dyaw >= math.pi / 2.0:
+        while dyaw >= math.pi:
             yaw[i + 1] -= math.pi * 2.0
             dyaw = yaw[i + 1] - yaw[i]
 
-        while dyaw <= -math.pi / 2.0:
+        while dyaw <= -math.pi:
             yaw[i + 1] += math.pi * 2.0
             dyaw = yaw[i + 1] - yaw[i]
 
